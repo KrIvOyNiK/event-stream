@@ -22,7 +22,7 @@ services:
       - "9042:9042"
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.4.3
+    image: confluentinc/cp-zookeeper:latest
     ports:
       - 2181:2181
       - 2888:2888
@@ -36,7 +36,7 @@ services:
       - zk_logs:/var/lib/zookeeper/log
 
   kafka:
-    image: confluentinc/cp-kafka:7.4.3
+    image: confluentinc/cp-kafka:latest
     depends_on:
       - zookeeper
     ports:
@@ -86,7 +86,7 @@ services:
       DYNAMIC_CONFIG_ENABLED: 'true'
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:7.4.3
+    image: confluentinc/cp-schema-registry:latest
     restart: unless-stopped
     networks:
       event-stream:
@@ -100,7 +100,7 @@ services:
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
 
   kafka-connect:
-    image: confluentinc/cp-kafka-connect-base:6.2.0
+    image: confluentinc/cp-kafka-connect-base:latest
     networks:
       event-stream:
     depends_on:
