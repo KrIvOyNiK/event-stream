@@ -1,8 +1,6 @@
 import 'dotenv/config';
 import { Application } from './application/application';
 
-async function app() {
+(async () => {
   new Application().start();
-}
-
-app();
+})();

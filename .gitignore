@@ -10,3 +10,5 @@
 *.launch
 .settings/
 *.sublime-workspace
+
+**.env
