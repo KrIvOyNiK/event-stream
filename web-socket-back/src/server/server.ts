@@ -1,6 +1,7 @@
 import * as http from 'node:http';
 import { ILogger } from '../logger/logger.interface';
 import { ConfigService } from '../config/config.service';
+import { ApiHttp } from '../api/http/api.http';
 
 export class Server {
   private httpServer: http.Server | null = null;
@@ -10,20 +11,22 @@ export class Server {
     port: number;
   };
 
-  constructor(logger: ILogger) {
+  private apiHttp: ApiHttp;
+
+  constructor(logger: ILogger, apiHttp: ApiHttp) {
     this.logger = logger.getInstance('Server');
     this.options = {
       host: '0.0.0.0',
       port: ConfigService.getInstance().get('app.port') || 3000,
     };
+    this.apiHttp = apiHttp;
   }
 
   start() {
     this.httpServer = this.httpServer || http.createServer();
 
     this.httpServer.on('request', (req, res) => {
-      if (req.url === '/health') return void this.health(req, res);
-      res.end('Http transport not implemented');
+      this.apiHttp.handler.handle(req, res);
     });
 
     this.httpServer.on('listening', () => {
@@ -32,11 +35,5 @@ export class Server {
     });
 
     this.httpServer.listen(this.options.port, this.options.host);
-  }
-
-  private health(req: http.IncomingMessage, res: http.ServerResponse) {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ health: 'ok' }));
   }
 }
